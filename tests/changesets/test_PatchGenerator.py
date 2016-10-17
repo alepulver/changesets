@@ -19,8 +19,7 @@ class TestPatchGenerator(unittest.TestCase):
         shutil.rmtree(str(self.output_dir.absolute()))
 
     def test_module_a(self):
-        target_dir = self.patched_dir / "module_a"
-        changeset = self.differ.diff(self.original_dir / "module_a", target_dir)
+        changeset = self.differ.diff("module_a", self.original_dir, self.patched_dir)
         patcher = PatchGenerator(changeset)
         patcher.patch_dir(self.output_dir)
 
@@ -29,8 +28,7 @@ class TestPatchGenerator(unittest.TestCase):
         self.assertFalse((self.output_dir / 'updated_from_another_module').exists())
 
     def test_module_b(self):
-        target_dir = self.patched_dir / "module_b"
-        changeset = self.differ.diff(self.original_dir / "module_b", target_dir)
+        changeset = self.differ.diff("module_b", self.original_dir, self.patched_dir)
         patcher = PatchGenerator(changeset)
         patcher.patch_dir(self.output_dir)
 

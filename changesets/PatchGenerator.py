@@ -7,9 +7,9 @@ class PatchGenerator:
         self.changeset = changeset
 
     def patch_dir(self, output_dir):
-        for file in self.changeset.files:
-            src_file = self.changeset.path / file
-            dst_file = output_dir / file
+        for change in self.changeset.changes:
+            src_file = change.module / change.path
+            dst_file = output_dir / change.path
             dst_dir = Path(dst_file).parent
             dst_dir.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(str(src_file), str(dst_file))

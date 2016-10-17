@@ -10,13 +10,19 @@ class ModuleProcessor:
     def __init__(self, original, patched):
         self.original = original
         self.patched = patched
-        self.filesets = None
         self.diff_generator = DiffGenerator()
         self.diff_combiner = DiffCombiner()
 
     def diff(self):
         modules = self.find_modules()
-        changesets = [self.diff_generator.diff(m) for m in modules]
+
+        changesets = {}
+        for m in modules:
+            original = self.original / m
+            patched = self.patched / m
+            change = self.diff_generator.diff(m, original, patched)
+            changesets[m] = change
+
         result = self.diff_combiner.combine(changesets)
         return result
 

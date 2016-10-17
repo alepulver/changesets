@@ -1,5 +1,5 @@
 class ChangeSet:
-    def __init__(self, path, files):
+    def __init__(self, path, changes):
         self.path = path
-        self.files = files
+        self.changes = changes
 

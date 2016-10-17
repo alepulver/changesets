@@ -14,13 +14,11 @@ class TestModuleProcessor(unittest.TestCase):
         self.differ = DiffGenerator()
 
     def test_module_a(self):
-        target_dir = self.patched_dir / "module_a"
-        changeset = self.differ.diff(self.original_dir / "module_a", target_dir)
-        self.assertEqual(changeset.path, target_dir)
-        self.assertEqual(changeset.files, [Path('new_file')])
+        changeset = self.differ.diff(Path("module_a"), self.original_dir, self.patched_dir)
+        self.assertEqual(changeset.path, self.patched_dir)
+        self.assertEqual(set(c.path for c in changeset.changes), {Path('new_file')})
 
     def test_module_b(self):
-        target_dir = self.patched_dir / "module_b"
-        changeset = self.differ.diff(self.original_dir / "module_b", target_dir)
-        self.assertEqual(changeset.path, target_dir)
-        self.assertSetEqual(set(changeset.files), set([Path('updated_file'), Path('updated_from_another_module')]))
+        changeset = self.differ.diff(Path("module_b"), self.original_dir, self.patched_dir)
+        self.assertEqual(changeset.path, self.patched_dir)
+        self.assertSetEqual(set(c.path for c in changeset.changes), {Path('updated_file'), Path('updated_from_another_module')})
