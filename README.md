@@ -23,3 +23,10 @@ $ find patched -type f
 $ python main.py original patched output
 ...
 ```
+
+## TODO
+
+- write tests
+- automate generating patches starting from one commit and including cherry picks
+- only test changed modules
+- use git to estimate changed modules by looking at module folders, to avoid building everything

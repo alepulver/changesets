@@ -6,7 +6,7 @@ from pathlib import Path
 
 # http://andreafrancia.it/2010/03/understanding-the-output-of-rsync-itemize-changes.html
 from changesets.ChangeSet import FileSet
-from changesets.ModuleDiffer import ModuleDiffer
+from changesets.ModuleProcessor import ModuleDiffer
 from changesets.PatchGenerator import PatchGenerator
 
 
@@ -25,7 +25,7 @@ def main(args):
     for f in changesets:
         print("{}: {}".format(f.module, ", ".join(f.files)))
 
-    differ.prepare_patch(Path("blah"))
+    differ.patch_dir(Path("blah"))
 
     patchgen = PatchGenerator(changesets, output_dir)
 
