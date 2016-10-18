@@ -22,4 +22,5 @@ class PatchGenerator:
             files_by_module[change.module].append(change.path)
 
         for k, v in files_by_module.items():
-            print("{}: {}".format(k, ", ".join(str(path) for path in v)))
+            module = k.relative_to(self.changeset.path)
+            print("{}: {}".format(module, ", ".join(str(path) for path in v)))

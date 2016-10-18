@@ -14,11 +14,11 @@ class TestDiffCombiner(unittest.TestCase):
         self.diff_combiner = DiffCombiner()
 
     def test_disjoint(self):
-        result = self.diff_combiner.combine([self.set_one, self.set_two])
+        result = self.diff_combiner.combine([self.set_one, self.set_two], "")
         self.assertSetEqual(set(c.path for c in result.changes),
                             {Path("first"), Path("second"), Path("third")})
 
     def test_override(self):
         with self.assertRaises(RuntimeError) as error:
-            result = self.diff_combiner.combine([self.set_one, self.set_three])
+            result = self.diff_combiner.combine([self.set_one, self.set_three], "")
         self.assertEquals(error.exception.args[0], "duplicated entry")

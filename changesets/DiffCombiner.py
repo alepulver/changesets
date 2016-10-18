@@ -1,9 +1,8 @@
-from changesets.Change import Change
 from changesets.ChangeSet import ChangeSet
 
 
 class DiffCombiner:
-    def combine(self, changesets):
+    def combine(self, changesets, path):
         all_files = set()
         all_changes = []
         for change_set in changesets:
@@ -15,4 +14,4 @@ class DiffCombiner:
                 else:
                     raise RuntimeError("duplicated entry")
 
-        return ChangeSet("all", all_changes)
+        return ChangeSet(path, all_changes)

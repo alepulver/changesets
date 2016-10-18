@@ -13,20 +13,16 @@ To run tests use `nosetests`.
 
 ## Usage
 
+This program requires Python >= 3.5. To manage versions you can use [pyenv](https://github.com/yyuu/pyenv).
+
 ```
-$ find original -type f
-...
-
-$ find patched -type f
-...
-
 $ python main.py original patched output
-...
 ```
+
+Where `output` is an existing directory, and `original` shares the underlying `target/classes` structure with `patched`.
 
 ## TODO
 
-- write tests
 - automate generating patches starting from one commit and including cherry picks
 - only test changed modules
 - use git to estimate changed modules by looking at module folders, to avoid building everything

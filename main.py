@@ -18,7 +18,7 @@ def main(args):
     output_dir = Path(args[2]).resolve()
 
     processor = ModuleProcessor(original_dir, patched_dir)
-    changeset = processor.diff()
+    changeset = processor.diff("*/target/classes", ["META-INF", "/codecheck"])
 
     patch_generator = PatchGenerator(changeset)
     patch_generator.report()
