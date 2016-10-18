@@ -3,10 +3,8 @@ import sys
 import os
 from pathlib import Path
 
-
 # http://andreafrancia.it/2010/03/understanding-the-output-of-rsync-itemize-changes.html
-from changesets.ChangeSet import FileSet
-from changesets.ModuleProcessor import ModuleDiffer
+from changesets.ModuleProcessor import ModuleProcessor
 from changesets.PatchGenerator import PatchGenerator
 
 
@@ -19,15 +17,13 @@ def main(args):
     patched_dir = Path(args[1]).resolve()
     output_dir = Path(args[2]).resolve()
 
-    differ = ModuleDiffer(original_dir, patched_dir)
-    changesets = differ.diff()
+    processor = ModuleProcessor(original_dir, patched_dir)
+    changeset = processor.diff()
 
-    for f in changesets:
-        print("{}: {}".format(f.module, ", ".join(f.files)))
+    patch_generator = PatchGenerator(changeset)
+    patch_generator.report()
+    patch_generator.patch_dir(output_dir)
 
-    differ.patch_dir(Path("blah"))
-
-    patchgen = PatchGenerator(changesets, output_dir)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

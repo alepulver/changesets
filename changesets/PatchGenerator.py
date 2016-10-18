@@ -15,4 +15,11 @@ class PatchGenerator:
             shutil.copyfile(str(src_file), str(dst_file))
 
     def report(self):
-        pass
+        files_by_module = {}
+        for change in self.changeset.changes:
+            if change.module not in files_by_module:
+                files_by_module[change.module] = []
+            files_by_module[change.module].append(change.path)
+
+        for k, v in files_by_module.items():
+            print("{}: {}".format(k, ", ".join(str(path) for path in v)))

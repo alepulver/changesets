@@ -14,14 +14,12 @@ class ModuleProcessor:
         self.diff_combiner = DiffCombiner()
 
     def diff(self):
-        modules = self.find_modules()
+        modules = [self.module_name(m) for m in self.find_modules()]
 
-        changesets = {}
+        changesets = []
         for m in modules:
-            original = self.original / m
-            patched = self.patched / m
-            change = self.diff_generator.diff(m, original, patched)
-            changesets[m] = change
+            change_set = self.diff_generator.diff(m, self.original, self.patched)
+            changesets.append(change_set)
 
         result = self.diff_combiner.combine(changesets)
         return result
@@ -34,6 +32,7 @@ class ModuleProcessor:
 
     def module_name(self, path):
         module_relpath = path.relative_to(self.original)
-        module_name = module_relpath.parents[1]
+        #module_name = module_relpath.parents[1]
+        module_name = module_relpath
         return module_name
 
