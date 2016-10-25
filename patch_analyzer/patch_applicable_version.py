@@ -1,9 +1,10 @@
 import sys
 import os
 import patch_utils
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, call
 
 UTILITY_PATH = "src/main/java/"
+PREFIX_BRANCH = "refs/tags/mule-"
 
 def filter_starting_with(l, start):
     return filter(lambda path: path.startswith(start), l)
@@ -15,6 +16,7 @@ def git_diff_files(git_source, v_origin, v_destination):
     working_dir = os.getcwd()
     try:
         os.chdir(git_source)
+        call(["git", "fetch", "--tags"])
         p = Popen(["git", "diff", "--name-only", v_origin + ".." + v_destination], stdout=PIPE)
         output, _ = p.communicate()
         files = [file.decode() for file in output.split(b"\n")]
@@ -53,25 +55,27 @@ def print_usage():
     print("If the origin version is not specified, it will be inferred from the Patch filename. Example:")
     print("\tpython " + sys.argv[0] + " SE-2618-3.7.3.jar ../Git/mule-ce ../Git/mule-ee 3.7.4")
 
-if __name__ == "__main__":
-    parameters = sys.argv[1:]
-    if len(parameters) < 4 or len(parameters) > 5:
+def main(args):
+    if len(args) < 4 or len(args) > 5:
         print_usage()
         sys.exit(1)
 
-    if len(parameters) == 4:
-        version = os.path.basename(parameters[0]).replace(".jar", "").split("-")[-1]
-        parameters.append(version)
+    if len(args) == 4:
+        version = os.path.basename(args[0]).replace(".jar", "").split("-")[-1]
+        args.append(version)
 
-    patch_source, ce_path, ee_path, v_dest, v_org = parameters
-    v_dest = "mule-" + v_dest
-    v_org = "mule-" + v_org
+    patch_source, ce_path, ee_path, v_dest, v_org = args
+    v_dest = PREFIX_BRANCH + v_dest
+    v_org = PREFIX_BRANCH + v_org
     p = PatchDiffer(ce_path, ee_path)
     classes = patch_utils.modified_classes(patch_source)
     if p.is_applicable(classes, v_org, v_dest):
-        print("The patch is applicable to the " + parameters[3] + " version")
+        print("The patch " + args[0] + " is applicable to the " + args[3] + " version")
     else:
-        print("There are conflicts in files:")
+        print("The patch " + args[0] + " has conflicts in files:")
         for file in p.get_conflicts():
             print("\t- " + file)
 
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

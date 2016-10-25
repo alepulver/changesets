@@ -13,10 +13,16 @@ def conflicts(patches):
     return conflict_classes
 
 
+def main(args):
+    all_conflicts = conflicts(args)
+    if len(all_conflicts) > 0:
+        for conflict, patches in all_conflicts.items():
+            print(conflict)
+            for patch in patches:
+                print("\t- " + patch)
+    else:
+        print("There are no conflicts between those patches")
 
 if __name__ == "__main__":
-    for conflict, patches in conflicts(sys.argv[1:]).items():
-        print(conflict)
-        for patch in patches:
-            print("\t- " + patch)
+    main(sys.argv[1:])
     
